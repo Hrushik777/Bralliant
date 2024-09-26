@@ -28,13 +28,13 @@ def capture_and_process():
 
         if key == ord(' '):
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            image_path = f"./images/{timestamp}.jpg"
+            image_path = f"images\\{timestamp}.jpg"
 
             cv2.imwrite(image_path, frame)
             print(f"Image saved as {timestamp}.jpg")
 
             text = read_text_from_image(image_path)
-            text_path = f"./texts/{timestamp}.txt"
+            text_path = f"texts\\{timestamp}.txt"
             with open(text_path, 'w') as file:
                 file.write(text)
             print(f"Text saved as {timestamp}.txt")
