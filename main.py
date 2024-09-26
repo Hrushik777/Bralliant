@@ -3,10 +3,9 @@ import os
 from datetime import datetime
 from text_reader import read_text_from_image
 from text_handler import save_text_to_file
-
+from arduino_serializer import arduino_write, arduino_initialize, arduino_close
 
 def capture_and_process():
-
     os.makedirs("./images/", exist_ok=True)
     os.makedirs("./texts/", exist_ok=True)
 
@@ -15,8 +14,9 @@ def capture_and_process():
         print("Could not open camera.")
         return
 
-    while True:
+    arduino_initialize()
 
+    while True:
         ret, frame = cam.read()
         if not ret:
             print("Error: Could not capture frame.")
@@ -35,15 +35,16 @@ def capture_and_process():
 
             text = read_text_from_image(image_path)
             save_text_to_file(text_path, text)
-            
 
+            arduino_write(text)
+            
         elif key == ord('q'):
             print("Exiting...")
             break
 
     cam.release()
     cv2.destroyAllWindows()
-
+    arduino_close()
 
 if __name__ == "__main__":
     capture_and_process()
