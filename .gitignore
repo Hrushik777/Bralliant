@@ -4,3 +4,6 @@
 # Output
 /images
 /texts
+
+# Cache
+__pycache__

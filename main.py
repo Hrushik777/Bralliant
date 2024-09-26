@@ -1,10 +1,9 @@
 import cv2
-import easyocr
 import os
-import subprocess
 from datetime import datetime
+from text_reader import read_text_from_image
+from text_handler import save_text_to_file
 
-reader = easyocr.Reader(['en'])
 
 def capture_and_process():
 
@@ -29,16 +28,14 @@ def capture_and_process():
         if key == ord(' '):
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             image_path = f"images\\{timestamp}.jpg"
+            text_path = f"texts\\{timestamp}.txt"
 
             cv2.imwrite(image_path, frame)
             print(f"Image saved as {timestamp}.jpg")
 
             text = read_text_from_image(image_path)
-            text_path = f"texts\\{timestamp}.txt"
-            with open(text_path, 'w') as file:
-                file.write(text)
-            print(f"Text saved as {timestamp}.txt")
-            open_file(text_path)
+            save_text_to_file(text_path, text)
+            
 
         elif key == ord('q'):
             print("Exiting...")
@@ -47,23 +44,6 @@ def capture_and_process():
     cam.release()
     cv2.destroyAllWindows()
 
-def read_text_from_image(image_path):
-    image = cv2.imread(image_path)
-    if image is None:
-        print("Error: Could not read the image.")
-        return ""
-
-    result = reader.readtext(image)
-    text = "\n".join([text for _, text, _ in result])
-    return text
-
-def open_file(file_path):
-    if os.name == 'nt':  # Windows
-        os.startfile(file_path)
-    elif os.uname().sysname == 'Darwin':  # macOS
-        subprocess.Popen(['open', file_path])
-    else:  # Linux
-        subprocess.Popen(['xdg-open', file_path])
 
 if __name__ == "__main__":
     capture_and_process()
