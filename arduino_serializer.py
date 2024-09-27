@@ -8,9 +8,9 @@ def arduino_initialize(port='COM3', baudrate=9600):
     arduino = serial.Serial(port, baudrate, timeout=1)
     time.sleep(2) 
 
-def arduino_write(text):
+def arduino_write(text, braille):
     global arduino
-    arduino.write((text + '\n').encode())
+    arduino.write((text + '|' + braille).encode())
 
 def arduino_close():
     global arduino

@@ -4,8 +4,9 @@ from datetime import datetime
 from text_reader import read_text_from_image
 from text_handler import save_text_to_file
 from arduino_serializer import arduino_write, arduino_initialize, arduino_close
+from braille_convert import convert_to_braille
 
-def capture_and_process():
+def main():
     os.makedirs("./images/", exist_ok=True)
     os.makedirs("./texts/", exist_ok=True)
 
@@ -36,7 +37,9 @@ def capture_and_process():
             text = read_text_from_image(image_path)
             save_text_to_file(text_path, text)
 
-            arduino_write(text)
+            braille = convert_to_braille(text)
+
+            arduino_write(text, braille)
             
         elif key == ord('q'):
             print("Exiting...")
@@ -47,4 +50,4 @@ def capture_and_process():
     arduino_close()
 
 if __name__ == "__main__":
-    capture_and_process()
+    main()
